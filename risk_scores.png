@@ -1,0 +1,53 @@
+# NFC Fraud Detection Wallet Prototype
+
+This repository contains a senior-project prototype for an AI-powered smart digital wallet with NFC payment simulation and fraud-risk scoring. The code does not process real card credentials. It simulates transaction context and demonstrates how a wallet can classify payments as low, medium, or high risk before completion.
+
+## Features
+
+- Rule-based transaction risk scoring
+- Interpretable penalty breakdowns for amount, location, time, merchant category, repeated attempts, and device state
+- Low/medium/high response categories
+- Simulated test transactions
+- Unit tests for low-risk and high-risk scenarios
+- CSV output for report tables and plots
+
+## Folder Structure
+
+```text
+src/risk_engine.py              Core scoring logic
+simulate_transactions.py        Runs demo transactions and writes CSV output
+tests/test_risk_engine.py       Pytest unit tests
+outputs/                        Generated CSV files and plots
+```
+
+## Setup
+
+```bash
+python -m venv .venv
+.venv\Scripts\activate      # Windows
+pip install -r requirements.txt
+```
+
+On macOS/Linux, activate with:
+
+```bash
+source .venv/bin/activate
+```
+
+## Run the Simulation
+
+```bash
+python simulate_transactions.py
+```
+
+The script writes `outputs/sample_results.csv` and prints a score explanation for each transaction.
+
+## Run Tests
+
+```bash
+pytest
+```
+
+## Important Note
+
+This is a research and class-project prototype. It uses simulated wallet credentials and transaction data only. It is not connected to a bank, card network, payment processor, or live NFC payment terminal.

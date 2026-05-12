@@ -1,0 +1,30 @@
+from datetime import datetime, timedelta
+import csv
+from pathlib import Path
+from src.risk_engine import UserProfile, Transaction, RiskEngine
+
+profile = UserProfile(
+    user_id='demo-user',
+    average_amount=28.50,
+    common_merchants={'grocery', 'gas', 'restaurant', 'coffee'},
+    home_lat=33.7701,
+    home_lon=-118.1937,
+)
+engine = RiskEngine()
+base = datetime(2026, 5, 1, 12, 0)
+transactions = [
+    Transaction(9.75, 'coffee', base, 33.7702, -118.1936, 0, True, True),
+    Transaction(31.40, 'grocery', base + timedelta(hours=2), 33.7689, -118.1910, 0, True, False),
+    Transaction(72.10, 'restaurant', base + timedelta(hours=6), 33.7800, -118.1800, 0, True, False),
+    Transaction(185.99, 'electronics', base + timedelta(hours=13), 34.0522, -118.2437, 1, True, False),
+    Transaction(420.00, 'jewelry', base + timedelta(hours=17), 36.1699, -115.1398, 3, False, False),
+]
+Path('outputs').mkdir(exist_ok=True)
+with open('outputs/sample_results.csv', 'w', newline='') as f:
+    writer = csv.writer(f)
+    writer.writerow(['amount','merchant','hour','score','category','action'])
+    for tx in transactions:
+        score, reasons = engine.score(profile, tx)
+        category = engine.classify(score)
+        writer.writerow([tx.amount, tx.merchant_category, tx.timestamp.hour, score, category, engine.recommended_action(category)])
+        print(tx, score, category, reasons)
